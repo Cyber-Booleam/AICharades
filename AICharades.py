@@ -1,6 +1,6 @@
 import os
 import openai
-openai.api_key = "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"
+openai.api_key = ${{ github.OPENAI_PRIVATE_KEY }}
 modelGPT = "gpt-3.5-turbo"
 def main():
     print("Welcome to AICharades please give your clue and ChatGPT will try to find the word.\n")
