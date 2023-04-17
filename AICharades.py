@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        openai.api_key = "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" 
+        openai.api_key = ${{ github.OPENAI_PRIVATE_KEY }} 
         self.modelGPT = "gpt-3.5-turbo"
         self.buildUI()
 
