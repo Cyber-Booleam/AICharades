@@ -1,11 +1,12 @@
+#install PyQt6
+
 import os
 import openai
 import random
 
 wordlist=[]
 def main():
-    # openai.api_key = "${{ github.OPENAI_PRIVATE_KEY }}"
-    openai.api_key = "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"
+    openai.api_key = "${{ github.OPENAI_PRIVATE_KEY }}"
     modelGPT = "gpt-3.5-turbo"
     with open('nouns.txt', 'r') as file:
         for line in file:
@@ -54,3 +55,4 @@ def resultScoring(clue,result):
             return i+1
     return -1
 main()
+
