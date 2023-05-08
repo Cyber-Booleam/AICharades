@@ -21,7 +21,7 @@ class Window(QWidget):
     global_word = ""
     def __init__(self):
         super().__init__()
-        openai.api_key = "OPENAI KEY"
+        openai.api_key = "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"
         self.modelGPT = "gpt-3.5-turbo"
         self.buildUI()
 
@@ -65,43 +65,45 @@ class Window(QWidget):
                 {"role": "user", "content": clue}
             ],temperature=0
         )
-        #print(chatresponse)
+        print(chatresponse)
         return self.parseResponse(chatresponse)
 
     def submit_text(self):
-        user_input_text = self.user_input.text()
+            user_input_text = self.user_input.text()
 
-        if (user_input_text == "exit"):
-            sys.exit(app.exec())
-        else:
-            self.chat_area.insertPlainText(f"User: {user_input_text}\n")
-            self.user_input.clear()
-
-            result = self.askChatGPT(user_input_text)
-            
-            #print("result")
-            #print(result)
-
-            num = self.resultScoring(global_word,result)
-
-            if(num>0):
-                print(f"{global_word} was the #{num} guess")
-                self.chat_area.insertPlainText(f"{global_word} was the #{num} guess\n")
+            if (user_input_text == "exit"):
+                sys.exit(app.exec())
             else:
-                print(f"{global_word} was not found in the first 50 guesses")
-                self.chat_area.insertPlainText(f"{global_word} was not found in the first 50 guesses\n")
-            with open("results.txt", 'a') as file:
-                file.write(f"\n{global_word},{user_input_text},{num}")
-            
-            self.welcome()
+                self.chat_area.insertPlainText(f"User: {user_input_text}\n")
+                self.user_input.clear()
+                result = self.askChatGPT(user_input_text)
+                #print("result")
+                    # print(result)
+                num = self.resultScoring(global_word,result)
+
+                if(num>0):
+                    print(f"{global_word} was the #{num} guess")
+                    self.chat_area.insertPlainText(f"{global_word} was the #{num} guess\n")
+                else:
+                    print(f"{global_word} was not found in the first 50 guesses")
+                    self.chat_area.insertPlainText(f"{global_word} was not found in the first 50 guesses\n")
+                with open("results.txt", 'a') as file:
+                    file.write(f"\n{global_word},{user_input_text},{num}")
+
+                self.welcome()
 
     def parseResponse(self, chatresponse):
         parse = chatresponse['choices'][0]['message']['content'].split('\n')
-        for i in range(len(parse)):
-            print(parse[i])
-            # self.chat_area.insertPlainText(f"\n{parse[i]}\n")
-            parse[i] = parse[i].split(".")[1].strip()
-        return parse
+        # print(len(parse))
+        if len(parse) >50:
+            for i in range(len(parse)):
+                print(parse[i])
+                # self.chat_area.insertPlainText(f"\n{parse[i]}\n")
+                parse[i] = parse[i].split(".")[1].strip()
+            return parse
+        else:
+            return []
+        # self.askChatGPT(user_input_text)
 
     def resultScoring(self, clue, result):
         for i,word in enumerate(result):
