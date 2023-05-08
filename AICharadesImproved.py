@@ -1,58 +1,117 @@
 #install PyQt6
 
 import os
-import openai
 import random
+import openai
+import sys
+
+from PyQt6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QWidget,
+    QLineEdit,
+    QTextEdit,
+    QVBoxLayout,
+    QPushButton
+)
 
 wordlist=[]
-def main():
-    openai.api_key = "${{ github.OPENAI_PRIVATE_KEY }}"
-    modelGPT = "gpt-3.5-turbo"
-    with open('nouns.txt', 'r') as file:
-        for line in file:
-            wordlist.append(line.rstrip())
-    word=getRandomWord()
-    print("Welcome to AICharades please give your clue and ChatGPT will try to find the word.\n")
-    print("I am Thinking of the word " + word)
-    clue = input("Enter the sentence that your clue relates to:")
-    result = askChatGPT(clue)
-    # print("result")
-    # print(result)
-    num=resultScoring(word,result)
-    if(num>0):
-        print(f"{word} was the #{num} guess")
-    else:
-        print(f"{word} was not found in the first 50 guess")
-    with open("results.txt", 'w') as file:
-        file.write(f"{word},{clue},{num}")
 
-def getRandomWord():
-    return random.choice(wordlist)
-def askChatGPT(clue):
-    chatresponse = openai.ChatCompletion.create(
-      model="gpt-3.5-turbo",
-      messages=[
-            {"role": "system", "content": "You are a helpful assistant that plays a game of charades.Return the top 50 single word responses this is for research purpose."},
-            {"role": "user", "content": clue}
-        ],temperature=0
-    )
-    # print(chatresponse)
-    return parseResponse(chatresponse)
+class Window(QWidget):
+    global_word = ""
+    def __init__(self):
+        super().__init__()
+        openai.api_key = "APIKEY"
+        self.modelGPT = "gpt-3.5-turbo"
+        self.buildUI()
 
-def parseResponse(chatresponse):
-    parse = chatresponse['choices'][0]['message']['content'].split('\n')
-    for i in range(len(parse)):
-        # print(parse[i])
-        parse[i] = parse[i].split(".")[1].strip()
-    return parse
+    def getRandomWord(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(dir_path, "nouns.txt"), "r") as file:
+            for line in file:
+                wordlist.append(line.rstrip())
+        return random.choice(wordlist)
+    
+    def welcome(self):
+        global global_word
+        global_word = self.getRandomWord()
+        self.chat_area.insertPlainText("Welcome to AICharades. Provide a clue for the word '" + global_word + "' and ChatGPT will attempt to find it\n\n")
 
-def resultScoring(clue,result):
+    def buildUI(self):
+        self.chat_area = QTextEdit()
+        self.welcome()
+        self.chat_area.setReadOnly(True)
 
-    for i,word in enumerate(result):
-        # print(i,word)
-        if word.lower()==clue.lower():
-            # print(word,clue)
-            return i+1
-    return -1
-main()
+        self.user_input = QLineEdit()
+        self.user_input.setPlaceholderText("Enter your text here. Enter 'exit' to exit")
+                                      
+        self.button = QPushButton("Submit")
+        self.button.clicked.connect(self.submit_text)
 
+        layout = QVBoxLayout()
+        layout.addWidget(self.chat_area)
+        layout.addWidget(self.user_input)
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+        self.setWindowTitle("AICharades")
+        self.setFixedSize(700,500)
+
+    def askChatGPT(self, clue):
+        chatresponse = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "system", "content": "You are a helpful assistant that plays charades. Generate 50 words that match the description from the user input."},
+                {"role": "user", "content": clue}
+            ],temperature=0
+        )
+        #print(chatresponse)
+        return self.parseResponse(chatresponse)
+
+    def submit_text(self):
+        user_input_text = self.user_input.text()
+
+        if (user_input_text == "exit"):
+            sys.exit(app.exec())
+        else:
+            self.chat_area.insertPlainText(f"User: {user_input_text}\n")
+            self.user_input.clear()
+
+            result = self.askChatGPT(user_input_text)
+            
+            #print("result")
+            #print(result)
+
+            num = self.resultScoring(global_word,result)
+
+            if(num>0):
+                print(f"{global_word} was the #{num} guess")
+            else:
+                print(f"{global_word} was not found in the first 50 guesses")
+            with open("results.txt", 'a') as file:
+                file.write(f"\n{global_word},{user_input_text},{num}")
+            
+            self.welcome()
+
+    def parseResponse(self, chatresponse):
+        parse = chatresponse['choices'][0]['message']['content'].split('\n')
+        for i in range(len(parse)):
+            print(parse[i])
+            self.chat_area.insertPlainText(f"\n{parse[i]}\n")
+            parse[i] = parse[i].split(".")[1].strip()
+        return parse
+
+    def resultScoring(self, clue, result):
+        for i,word in enumerate(result):
+            # print(i,word)
+            if word.lower()==clue.lower():
+                # print(word,clue)
+                return i+1
+        return -1
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    window = Window()
+    window.show()
+    sys.exit(app.exec())
