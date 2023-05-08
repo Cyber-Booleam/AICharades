@@ -21,7 +21,7 @@ class Window(QWidget):
     global_word = ""
     def __init__(self):
         super().__init__()
-        openai.api_key = "APIKEY"
+        openai.api_key = "OPENAI KEY"
         self.modelGPT = "gpt-3.5-turbo"
         self.buildUI()
 
@@ -61,7 +61,7 @@ class Window(QWidget):
         chatresponse = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-                {"role": "system", "content": "You are a helpful assistant that plays charades. Generate 50 words that match the description from the user input."},
+                {"role": "system", "content": "You are a helpful assistant that plays charades. Generate 50 words that match the description from the user input. The words generated are one word."},
                 {"role": "user", "content": clue}
             ],temperature=0
         )
@@ -86,8 +86,10 @@ class Window(QWidget):
 
             if(num>0):
                 print(f"{global_word} was the #{num} guess")
+                self.chat_area.insertPlainText(f"{global_word} was the #{num} guess\n")
             else:
                 print(f"{global_word} was not found in the first 50 guesses")
+                self.chat_area.insertPlainText(f"{global_word} was not found in the first 50 guesses\n")
             with open("results.txt", 'a') as file:
                 file.write(f"\n{global_word},{user_input_text},{num}")
             
@@ -97,7 +99,7 @@ class Window(QWidget):
         parse = chatresponse['choices'][0]['message']['content'].split('\n')
         for i in range(len(parse)):
             print(parse[i])
-            self.chat_area.insertPlainText(f"\n{parse[i]}\n")
+            # self.chat_area.insertPlainText(f"\n{parse[i]}\n")
             parse[i] = parse[i].split(".")[1].strip()
         return parse
 
