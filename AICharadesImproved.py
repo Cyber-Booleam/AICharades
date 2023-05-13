@@ -21,7 +21,7 @@ class Window(QWidget):
     global_word = ""
     def __init__(self):
         super().__init__()
-        openai.api_key = "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"
+        openai.api_key = "YOUR_API_KEY"
         self.modelGPT = "gpt-3.5-turbo"
         self.buildUI()
 
