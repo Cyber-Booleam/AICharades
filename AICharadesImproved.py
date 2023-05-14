@@ -65,6 +65,7 @@ class Window(QWidget):
                 {"role": "user", "content": clue}
             ],temperature=0
         )
+        print(clue)
         print(chatresponse)
         return self.parseResponse(chatresponse)
 
@@ -95,9 +96,9 @@ class Window(QWidget):
     def parseResponse(self, chatresponse):
         parse = chatresponse['choices'][0]['message']['content'].split('\n')
         # print(len(parse))
-        if len(parse) >50:
+        if len(parse) >10:
             for i in range(len(parse)):
-                print(parse[i])
+                # print(parse[i])
                 # self.chat_area.insertPlainText(f"\n{parse[i]}\n")
                 parse[i] = parse[i].split(".")[1].strip()
             return parse
@@ -107,7 +108,7 @@ class Window(QWidget):
 
     def resultScoring(self, clue, result):
         for i,word in enumerate(result):
-            # print(i,word)
+            print(i,word)
             if word.lower()==clue.lower():
                 # print(word,clue)
                 return i+1
