@@ -65,8 +65,8 @@ class Window(QWidget):
                 {"role": "user", "content": clue}
             ],temperature=0
         )
-        print(clue)
-        print(chatresponse)
+        # print(clue)
+        # print(chatresponse)
         return self.parseResponse(chatresponse)
 
     def submit_text(self):
@@ -78,15 +78,13 @@ class Window(QWidget):
                 self.chat_area.insertPlainText(f"User: {user_input_text}\n")
                 self.user_input.clear()
                 result = self.askChatGPT(user_input_text)
-                #print("result")
-                    # print(result)
                 num = self.resultScoring(global_word,result)
 
-                if(num>0):
-                    print(f"{global_word} was the #{num} guess")
+                if(num<51):
+                    # print(f"{global_word} was the #{num} guess")
                     self.chat_area.insertPlainText(f"{global_word} was the #{num} guess\n")
                 else:
-                    print(f"{global_word} was not found in the first 50 guesses")
+                    # print(f"{global_word} was not found in the first 50 guesses")
                     self.chat_area.insertPlainText(f"{global_word} was not found in the first 50 guesses\n")
                 with open("results.txt", 'a') as file:
                     file.write(f"\n{global_word},{user_input_text},{num}")
@@ -108,7 +106,7 @@ class Window(QWidget):
 
     def resultScoring(self, clue, result):
         for i,word in enumerate(result):
-            print(i,word)
+            # print(i,word)
             if word.lower()==clue.lower():
                 # print(word,clue)
                 return i+1
