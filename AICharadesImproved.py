@@ -112,7 +112,7 @@ class Window(QWidget):
             if word.lower()==clue.lower():
                 # print(word,clue)
                 return i+1
-        return -1
+        return 51
 
 
 if __name__ == "__main__":

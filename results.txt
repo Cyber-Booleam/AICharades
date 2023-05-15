@@ -1,0 +1,31 @@
+year,A measurement of time that is commonly used to determine age,1
+smile,A gesture used to imply happiness,1
+nurse,A person who works in the medical field ,2
+crown,A article of clothing worn by royalty,1
+mimosa,A spiked orange juice,1
+factory,A place of mass production,1
+slash,A act of swinging a sword,1
+cover,Something to hide behind while under fire,51
+chicken,Cock,2
+riddle,A witty question where the answer is usually a pun,1
+throne,A chair fitting for a king,1
+television,A visual medium for consuming entertainment,1
+acknowledgment,Noting that something happened,51
+malaysia,A asian country,6
+chalk,A writing utensil that can be erased by wiping with your hand,51
+buzzard,A north american vulture,51
+swedish,The country where IKEA is originated,51
+bacon,A breakfast dish commonly enjoyed crispy,1
+detective,A person who solve crimes,1
+criminal,Someone who commits crimes,1
+grass,Something gamers dont touch,51
+black,Every color combined,51
+leek,The thing hatsune miku run around with in the polka folk dance song,1
+duck,The dish chinese eat a lot especially in bejing,51
+Defense,The opposite of offense,1
+cupboard,A overhead place where you keep your dishes or cups,2
+mouth,a orifice to intake food,1
+libra,The zodiac sign between september and october,1
+carol,A religious folk song,8
+saw,The series of horror movies directed by James Wan,1
+element,The thing the avatar the last airbender had to master,1
